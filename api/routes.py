@@ -1,16 +1,20 @@
+import os
 import unittest
-from flask import Flask, Blueprint, jsonify, request
+from flask import Flask
 from models import db
-import controllers
+from api.routes import api  # <-- Importar el Blueprint real con tus rutas
 
-api = Blueprint("api", __name__)
 
 class TestAPI(unittest.TestCase):
 
     def setUp(self):
         self.app = Flask(__name__)
         self.app.config["TESTING"] = True
-        self.app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:root@localhost/juegos_test"
+        self.app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+            "TEST_DATABASE_URL",
+            "sqlite:///:memory:"
+        )
+        self.app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
         db.init_app(self.app)
         self.app.register_blueprint(api, url_prefix="/api")
