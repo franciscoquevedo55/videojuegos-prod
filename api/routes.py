@@ -1,8 +1,9 @@
 import unittest
-from flask import Flask
+from flask import Flask, Blueprint, jsonify, request
 from models import db
-from api.routes import api
+import controllers
 
+api = Blueprint("api", __name__)
 
 class TestAPI(unittest.TestCase):
 
